@@ -85,8 +85,8 @@ final class AssistHandleReminderExpBehavior implements BehaviorController {
             TimeUnit.SECONDS.toMillis(1);
     private static final long DEFAULT_SHOW_AND_GO_DELAY_RESET_TIMEOUT_MS =
             TimeUnit.SECONDS.toMillis(3);
-    private static final boolean DEFAULT_SUPPRESS_ON_LOCKSCREEN = false;
-    private static final boolean DEFAULT_SUPPRESS_ON_LAUNCHER = false;
+    private static final boolean DEFAULT_SUPPRESS_ON_LOCKSCREEN = true;
+    private static final boolean DEFAULT_SUPPRESS_ON_LAUNCHER = true;
     private static final boolean DEFAULT_SUPPRESS_ON_APPS = true;
     private static final boolean DEFAULT_SHOW_WHEN_TAUGHT = false;
 
