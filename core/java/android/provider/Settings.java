@@ -5946,6 +5946,24 @@ public final class Settings {
          */
         public static final String STYLE_OVERLAY_SETTINGS_CARDS = "style_overlay_settings_cards";
 
+
+        /**
+         * Whether to indicate the device is smart charging
+         * @hide
+         */
+        public static final String SMART_CHARGE_INDICATION = "smart_charge_indication";
+
+        /**
+         * @hide
+         */
+        public static final String STYLE_OVERLAY_SETTINGS_DASHBOARD_ICONS = "style_overlay_settings_dashboard_icons";
+
+        /**
+         * Whether to display 4G icon instead LTE
+         * @hide
+         */
+        public static final String SHOW_FOURG_ICON = "show_fourg_icon";
+
         /**
          * Keys we no longer back up under the current schema, but want to continue to
          * process when restoring historical backup datasets.
@@ -14884,6 +14902,30 @@ public final class Settings {
          * @hide
          */
         public static final String HYBRID_SYSUI_BATTERY_WARNING_FLAGS = "hybrid_sysui_battery_warning_flags";
+
+        /**
+         * Whether to enable Wakelock blocker
+         * @hide
+         */
+        public static final String WAKELOCK_BLOCKING_ENABLED = "wakelock_blocking_enabled";
+
+        /**
+         * List of blocked wakelocks
+         * @hide
+         */
+        public static final String WAKELOCK_BLOCKING_LIST = "wakelock_blocking_list";
+
+        /**
+         * Whether to enable Alarm blocker
+         * @hide
+         */
+        public static final String ALARM_BLOCKING_ENABLED = "alarm_blocking_enabled";
+
+        /**
+         * List of blocked alarms
+         * @hide
+         */
+        public static final String ALARM_BLOCKING_LIST = "alarm_blocking_list";
 
         /**
          * Global settings that shouldn't be persisted.

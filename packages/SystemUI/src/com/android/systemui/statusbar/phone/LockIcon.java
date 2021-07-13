@@ -67,7 +67,7 @@ public class LockIcon extends KeyguardAffordanceView {
 
             int newState = mState;
             Drawable icon = getIcon(newState);
-            setImageDrawable(icon, false, false);
+            setImageDrawable(icon, false);
 
             if (newState == STATE_SCANNING_FACE) {
                 announceForAccessibility(getResources().getString(
@@ -177,7 +177,7 @@ public class LockIcon extends KeyguardAffordanceView {
         int iconRes = isAnim ? getThemedAnimationResId(lockAnimIndex) : getIconForState(newState);
 
         if (!mDrawableCache.contains(iconRes)) {
-            mDrawableCache.put(iconRes, getResources().getDrawable(iconRes));
+            mDrawableCache.put(iconRes, mContext.getDrawable(iconRes));
         }
 
         return mDrawableCache.get(iconRes);

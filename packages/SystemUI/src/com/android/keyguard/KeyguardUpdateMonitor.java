@@ -128,6 +128,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.android.internal.util.custom.faceunlock.FaceUnlockUtils;
+import com.android.internal.util.custom.FodUtils;
 
 /**
  * Watches for updates that may be interesting to the keyguard, and provides
@@ -323,6 +324,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     };
 
     private final Handler mHandler;
+    private final boolean mHasFod;
 
     private final Observer<Integer> mRingerModeObserver = new Observer<Integer>() {
         @Override
@@ -1739,6 +1741,8 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             }
         };
 
+        mHasFod = FodUtils.hasFodSupport(mContext);
+
         // Since device can't be un-provisioned, we only need to register a content observer
         // to update mDeviceProvisioned when we are...
         if (!mDeviceProvisioned) {
@@ -1746,7 +1750,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         }
 
         // Take a guess at initial SIM state, battery status and PLMN until we get an update
-        mBatteryStatus = new BatteryStatus(BATTERY_STATUS_UNKNOWN, 100, 0, 0, 0, false, false, false);
+        mBatteryStatus = new BatteryStatus(BATTERY_STATUS_UNKNOWN, 100, 0, 0, 0, true, false, false, false, false);
 
         // Watch for interesting updates
         final IntentFilter filter = new IntentFilter();
@@ -2134,14 +2138,18 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             mFingerprintCancelSignal = new CancellationSignal();
 
             if (isEncryptedOrLockdown(userId)) {
-                mFpm.detectFingerprint(mFingerprintCancelSignal, mFingerprintDetectionCallback,
-                        userId);
+                if (mHasFod) {
+                    setFingerprintRunningState(BIOMETRIC_STATE_STOPPED);
+                } else {
+                    mFpm.detectFingerprint(mFingerprintCancelSignal, mFingerprintDetectionCallback,
+                            userId);
+                    setFingerprintRunningState(BIOMETRIC_STATE_RUNNING);
+                }
             } else {
                 mFpm.authenticate(null, mFingerprintCancelSignal, 0,
                         mFingerprintAuthenticationCallback, null, userId);
+                setFingerprintRunningState(BIOMETRIC_STATE_RUNNING);
             }
-
-            setFingerprintRunningState(BIOMETRIC_STATE_RUNNING);
         }
     }
 
@@ -2641,6 +2649,8 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         final boolean wasPluggedIn = old.isPluggedIn();
         final boolean stateChangedWhilePluggedIn = wasPluggedIn && nowPluggedIn
                 && (old.status != current.status);
+        final boolean nowPresent = current.present;
+        final boolean wasPresent = old.present;
 
         // change in plug state is always interesting
         if (wasPluggedIn != nowPluggedIn || stateChangedWhilePluggedIn) {
@@ -2662,6 +2672,11 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             return true;
         }
 
+        // change in smart charging while plugged in
+        if (nowPluggedIn && current.smartChargeStatus != old.smartChargeStatus) {
+            return true;
+        }
+
         // change in warp charging while plugged in
         if (nowPluggedIn && current.warpChargeStatus != old.warpChargeStatus) {
             return true;
@@ -2674,6 +2689,11 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
         // change in battery overheat
         if (current.health != old.health) {
+            return true;
+        }
+
+        // Battery either showed up or disappeared
+        if (wasPresent != nowPresent) {
             return true;
         }
 

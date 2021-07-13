@@ -307,6 +307,9 @@ class Task extends WindowContainer<WindowContainer> {
     String mCallingPackage;
     String mCallingFeatureId;
 
+    // Package name
+    String mPackageName;
+
     private final Rect mTmpStableBounds = new Rect();
     private final Rect mTmpNonDecorBounds = new Rect();
     private final Rect mTmpBounds = new Rect();
@@ -932,6 +935,9 @@ class Task extends WindowContainer<WindowContainer> {
         mCallingUid = r.launchedFromUid;
         mCallingPackage = r.launchedFromPackage;
         mCallingFeatureId = r.launchedFromFeatureId;
+        if(info != null){
+            mPackageName = info.packageName;
+        }
         setIntent(intent != null ? intent : r.intent, info != null ? info : r.info);
         setLockTaskAuth(r);
 
@@ -946,6 +952,9 @@ class Task extends WindowContainer<WindowContainer> {
 
     /** Sets the original intent, _without_ updating the calling uid or package. */
     private void setIntent(Intent _intent, ActivityInfo info) {
+        if(info != null){
+            mPackageName = info.packageName;
+        }
         final boolean isLeaf = isLeafTask();
         if (intent == null) {
             mNeverRelinquishIdentity =
@@ -4597,11 +4606,11 @@ class Task extends WindowContainer<WindowContainer> {
         }
         final boolean wasHidden = isForceHidden();
         mForceHiddenFlags = newFlags;
-        if (wasHidden && isFocusableAndVisible()) {
-            // The change in force-hidden state will change visibility without triggering a stack
-            // order change, so we should reset the preferred top focusable stack to ensure it's not
-            // used if a new activity is started from this task.
-            getDisplayArea().resetPreferredTopFocusableStackIfBelow(this);
+        if (wasHidden != isForceHidden() && isTopActivityFocusable()) {
+            // The change in force-hidden state will change visibility without triggering a root
+            // task order change, so we should reset the preferred top focusable root task to ensure
+            // it's not used if a new activity is started from this task.
+            getDisplayArea().resetPreferredTopFocusableRootTaskIfNeeded(this);
         }
         return true;
     }
