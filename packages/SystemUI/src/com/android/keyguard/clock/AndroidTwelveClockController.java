@@ -83,6 +83,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.Date;
 
 import android.app.Service;
 import android.app.Application;
@@ -222,11 +223,21 @@ public class AndroidTwelveClockController implements ClockPlugin {
     public Bitmap getPreview(int width, int height) {
 
         View previewView = mLayoutInflater.inflate(R.layout.android_twelve_clock_preview, null);
-        setViews(previewView);
-        TextClock previewClock = mView.findViewById(R.id.clock);
-        previewClock.setFormat12Hour("h\nmm");
+
+        TextClock previewClock = previewView.findViewById(R.id.clock);
+        TextView previewTitle = previewView.findViewById(R.id.title);
+        previewClock.setFormat12Hour("hh\nmm");
         previewClock.setFormat24Hour("kk\nmm");
-        onTimeTick();
+        previewTitle.setText(new SimpleDateFormat("EEE, MMM d", Locale.getDefault()).format(new Date()));
+
+        ColorExtractor.GradientColors colors = mColorExtractor.getColors(
+                WallpaperManager.FLAG_LOCK);
+        mPalette.setColorPalette(colors.supportsDarkText(), colors.getColorPalette());
+
+        int color = getTextColor();
+        previewClock.setTextColor(color);
+        previewTitle.setTextColor(color);
+
         return mRenderer.createPreview(previewView, width, height);
     }
 

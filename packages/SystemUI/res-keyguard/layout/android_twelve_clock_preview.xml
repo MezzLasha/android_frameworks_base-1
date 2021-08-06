@@ -10,12 +10,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.keyguard.clock.ClockLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center">
 
-    <TextView
+    <TextClock
         android:id="@+id/clock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,4 +47,4 @@
         android:textSize="20dp"
         android:theme="@style/TextAppearance.Keyguard"
         android:visibility="visible" />
-</FrameLayout>
+</com.android.keyguard.clock.ClockLayout>
