@@ -4036,6 +4036,17 @@ public final class Settings {
         public static final String PEAK_REFRESH_RATE = "peak_refresh_rate";
 
         /**
+         * The user selected preferred refresh rate in frames per second.
+         *
+         * This defines the refresh rate at which UI will run, provided it
+         * falls in the range of minimum and peak refresh rate.
+         *
+         * If this isn't set, the system falls back to a device specific default.
+         * @hide
+         */
+        public static final String PREFERRED_REFRESH_RATE = "preferred_refresh_rate";
+
+        /**
          * Whether refresh rate should be switched to 60Hz on power save mode.
          * @hide
          */
@@ -5302,6 +5313,13 @@ public final class Settings {
          * @hide
          */
         public static final String NOTIFICATION_PULSE_DURATION = "ambient_notification_light_duration";
+
+
+        /**
+         * Enable and disable Artwork on background media notification
+         * @hide
+         */
+        public static final String ARTWORK_MEDIA_BACKGROUND = "artwork_media_background";
 
         /**
          * @hide
@@ -10492,6 +10510,12 @@ public final class Settings {
                 "reminder_exp_learning_event_count";
 
         /**
+         * Face Unlock Method
+         * @hide
+         */
+        public static final String FACE_UNLOCK_METHOD = "face_unlock_method";
+
+        /**
          * These entries are considered common between the personal and the managed profile,
          * since the managed profile doesn't get to change them.
          */
@@ -13695,6 +13719,14 @@ public final class Settings {
          * @hide
          */
         public static final String AGGRESSIVE_STANDBY_ENABLED = "aggressive_standby_enabled";
+
+        /**
+         * Flag to automatically enable Aggressive Idle and Standby with battery saver.
+         * Type: int (0 for false, 1 for true)
+         * Default: 0
+         * @hide
+         */
+        public static final String AGGRESSIVE_BATTERY_SAVER = "aggressive_battery_saver";
 
         /**
          * Scaling factor for normal window animations. Setting to 0 will
